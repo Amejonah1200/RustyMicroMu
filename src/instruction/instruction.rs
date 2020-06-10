@@ -26,41 +26,41 @@ pub trait ExecutableInstruction {
 }
 
 enum_from_primitive! {
-# [derive(Debug, PartialEq, Clone)]
-pub enum InstructionType {
-    RRC = 0b00_0000,
-    SWPB,
-    RRA,
-    SXT,
-    PUSH,
-    CALL,
-    RETI,
-    JNZ = 0b01_0000,
-    JZ,
-    JNC,
-    JC,
-    JN,
-    JGE,
-    JL,
-    JMP,
-    MOV = 0b10_0000,
-    ADD,
-    ADDC,
-    SUBC,
-    SUB,
-    CMP,
-    DADD,
-    BIT,
-    BIC,
-    BIS,
-    XOR,
-    AND,
-    Unknown = 0b11_0000,
-}
+    # [derive(Debug, PartialEq, Clone)]
+    pub enum InstructionType {
+        RRC = 0b00_0000,
+        SWPB,
+        RRA,
+        SXT,
+        PUSH,
+        CALL,
+        RETI,
+        JNZ = 0b01_0000,
+        JZ,
+        JNC,
+        JC,
+        JN,
+        JGE,
+        JL,
+        JMP,
+        MOV = 0b10_0000,
+        ADD,
+        ADDC,
+        SUBC,
+        SUB,
+        CMP,
+        DADD,
+        BIT,
+        BIC,
+        BIS,
+        XOR,
+        AND,
+        Unknown = 0b11_0000,
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub enum AddressingModes {
+pub enum AddressingMode {
     RegisterDirect(u8),
     RegisterIndexed(u8, u16),
     RegisterIndirect(u8),

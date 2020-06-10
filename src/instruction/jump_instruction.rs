@@ -85,16 +85,16 @@ pub fn get_jump_from_instruction(value: u16) -> JumpType {
 }
 
 enum_from_primitive! {
-# [derive(Debug, PartialEq, Clone)]
-pub enum JumpType {
-JNZ,
-JZ,
-JNC,
-JC,
-JN,
-JGE,
-JL,
-JMP,
-Unknown,
-}
+    # [derive(Debug, PartialEq, Clone)]
+    pub enum JumpType {
+        JNZ,
+        JZ,
+        JNC,
+        JC,
+        JN,
+        JGE,
+        JL,
+        JMP,
+        Unknown,
+    }
 }
