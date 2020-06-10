@@ -25,7 +25,7 @@ impl CPU {
                 break;
             }
             let instruction = Instruction::new(self.get_pc(), self.memory.get_word(self.get_pc()));
-            // parse_state, parsed value
+            let parse_state = disassembler::parse_instruction(self, instruction);
             let executable = match parse_state {
                 ParseState::Done(insn) => insn,
                 ParseState::Error(_) => return ExecutionResult::ParseError,
