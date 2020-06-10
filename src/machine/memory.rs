@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 pub struct Memory {
-    memory: [u8; 0xFFFF]
+    memory: [u8; 0xFFFF],
 }
 
 impl Memory {
@@ -9,7 +9,7 @@ impl Memory {
         self.memory[address as usize] = value;
     }
 
-    pub fn get_byte(&mut self, address: u16) -> u8 {
+    pub fn get_byte(&self, address: u16) -> u8 {
         return self.memory[address as usize];
     }
 
@@ -18,7 +18,7 @@ impl Memory {
         self.set_byte(address + 1, (value >> 8) as u8);
     }
 
-    pub fn get_word(&mut self, address: u16) -> u16 {
+    pub fn get_word_be(&self, address: u16) -> u16 {
         return (self.get_byte(address) | (self.get_byte(address + 1) << 8)) as u16;
     }
 

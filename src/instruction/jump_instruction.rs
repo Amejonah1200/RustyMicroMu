@@ -75,6 +75,10 @@ impl ExecutableInstruction for JumpInstruction {
             None => InstructionType::Unknown,
         }
     }
+
+    fn get_instruction_raw(&self) -> Instruction {
+        self.instruction.clone()
+    }
 }
 
 pub fn get_jump_from_instruction(value: u16) -> JumpType {

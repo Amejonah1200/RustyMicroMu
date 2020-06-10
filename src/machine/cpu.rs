@@ -24,7 +24,8 @@ impl CPU {
             if self.is_flag_set(StatusFlag::CpuOffFlag as u16) {
                 break;
             }
-            let instruction = Instruction::new(self.get_pc(), self.memory.get_word(self.get_pc()));
+            let instruction =
+                Instruction::new(self.get_pc(), self.memory.get_word_be(self.get_pc()));
             let parse_state = disassembler::parse_instruction(self, instruction);
             let executable = match parse_state {
                 ParseState::Done(insn) => insn,
@@ -80,6 +81,10 @@ impl CPU {
 
     pub fn set_register(&mut self, register: usize, value: u16) {
         self.registers[register] = value;
+    }
+
+    pub fn get_memory(&self) -> &Memory {
+        &self.memory
     }
 }
 
