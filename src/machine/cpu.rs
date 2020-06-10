@@ -1,3 +1,9 @@
+#![allow(dead_code)]
+
+use crate::instruction::disassembler;
+use crate::instruction::disassembler::ParseState;
+use crate::instruction::instruction::Instruction;
+use crate::machine::cpu::ExecutionResult::CpuOff;
 use crate::machine::memory::Memory;
 
 pub struct CPU {
@@ -6,18 +12,35 @@ pub struct CPU {
 }
 
 impl CPU {
-    pub fn new() -> CPU {
+    pub fn new(memory: Memory) -> CPU {
         CPU {
-            memory: Memory::new(),
+            memory,
             registers: [0; 0x10],
         }
     }
 
-    pub fn isFlagSet(&self, flag: u16) -> bool {
+    fn run(&mut self) -> ExecutionResult {
+        loop {
+            if self.is_flag_set(StatusFlag::CpuOffFlag as u16) {
+                break;
+            }
+            let instruction = Instruction::new(self.get_pc(), self.memory.get_word(self.get_pc()));
+            // parse_state, parsed value
+            let executable = match parse_state {
+                ParseState::Done(insn) => insn,
+                ParseState::Error(_) => return ExecutionResult::ParseError,
+            };
+            self.set_pc(self.get_pc() + executable.get_length() as u16);
+            executable.execute(self);
+        }
+        CpuOff
+    }
+
+    pub fn is_flag_set(&self, flag: u16) -> bool {
         return (self.get_register(CPURegister::SR as usize) & flag) != 0;
     }
 
-    pub fn setFlagValue(&mut self, flag: u16, value: bool) {
+    pub fn set_flag(&mut self, flag: u16, value: bool) {
         self.set_sr(if value {
             self.get_sr() | flag
         } else {
@@ -25,7 +48,7 @@ impl CPU {
         });
     }
 
-    pub fn toggleFlagValue(&mut self, flag: u16) {
+    pub fn toggle_flag(&mut self, flag: u16) {
         self.set_register(CPURegister::SR as usize, (self.get_sr() ^ flag) & 0xff);
     }
 
@@ -58,6 +81,13 @@ impl CPU {
     pub fn set_register(&mut self, register: usize, value: u16) {
         self.registers[register] = value;
     }
+}
+
+pub enum ExecutionResult {
+    Done,
+    CpuOff,
+    ParseError,
+    ExecutionError,
 }
 
 #[repr(u8)]

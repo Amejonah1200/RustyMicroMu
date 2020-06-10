@@ -1,3 +1,5 @@
+use crate::machine::cpu::{ExecutionResult, CPU};
+
 pub struct Instruction {
     address: u16,
     value: u16,
@@ -15,6 +17,12 @@ impl Instruction {
     pub fn get_value(&self) -> u16 {
         return self.value;
     }
+}
+
+pub trait ExecutableInstruction {
+    fn get_length(&self) -> u16;
+    fn execute(&self, cpu: &mut CPU) -> ExecutionResult;
+    fn get_instruction_type(&self) -> InstructionType;
 }
 
 enum_from_primitive! {
