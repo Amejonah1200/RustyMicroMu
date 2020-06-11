@@ -1,8 +1,8 @@
 use num::FromPrimitive;
 
 use crate::instruction::instruction::AddressingMode::{
-    Absolute, Constant0, Constant2, Constant4, Constant8, ConstantN1, ConstantP1, RegisterDirect,
-    RegisterIndexed, RegisterIndirect, RegisterIndirectAutoincrement, Unknown,
+    Absolute, Constant0, Constant2, Constant4, Constant8, ConstantN1, ConstantP1, Immediate,
+    RegisterDirect, RegisterIndexed, RegisterIndirect, RegisterIndirectAutoincrement, Unknown,
 };
 use crate::machine::cpu::{ExecutionResult, CPU};
 
@@ -35,7 +35,14 @@ pub fn get_addressing_mode_source(cpu: &CPU, register: u16, source_mode: u16) ->
             0 => RegisterDirect(register),
             1 => RegisterIndexed(register, get_word_at_pc(cpu)),
             2 => RegisterIndirect(register),
-            3 => RegisterIndirectAutoincrement(register),
+            3 => {
+                if register == 0 {
+                    Immediate(get_word_at_pc(cpu))
+                } else {
+                    RegisterIndirectAutoincrement(register)
+                }
+            }
+
             _ => Unknown,
         },
         2 => match source_mode {
@@ -92,6 +99,13 @@ pub trait ExecutableInstruction {
     fn get_instruction_raw(&self) -> Instruction;
 }
 
+pub fn is_addressing_mode_extension(mode: &AddressingMode) -> bool {
+    match mode {
+        RegisterIndexed(_, _) | Absolute(_) => true,
+        _ => false,
+    }
+}
+
 enum_from_primitive! {
     #[derive(Debug, PartialEq, Clone)]
     pub enum InstructionType {
@@ -132,6 +146,7 @@ pub enum AddressingMode {
     RegisterIndexed(u16, u16),
     RegisterIndirect(u16),
     RegisterIndirectAutoincrement(u16),
+    Immediate(u16),
     Absolute(u16),
     Constant4,
     Constant8,
