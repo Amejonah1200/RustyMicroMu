@@ -94,6 +94,10 @@ impl CPU {
     pub fn get_memory(&self) -> &Memory {
         &self.memory
     }
+
+    pub fn get_memory_mut(&mut self) -> &mut Memory {
+        &mut self.memory
+    }
 }
 
 #[derive(PartialEq)]
