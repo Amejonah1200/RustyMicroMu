@@ -40,8 +40,8 @@ impl JumpInstruction {
 }
 
 impl ExecutableInstruction for JumpInstruction {
-    fn get_length(&self) -> u16 {
-        2
+    fn get_extensions_amount(&self) -> u16 {
+        0
     }
 
     fn execute(&self, cpu: &mut CPU) -> ExecutionResult {

@@ -31,7 +31,7 @@ impl CPU {
                 ParseState::Done(insn) => insn,
                 ParseState::Error(_) => return ExecutionResult::ParseError,
             };
-            self.set_pc(self.get_pc() + executable.get_length() as u16);
+            self.set_pc(self.get_pc() + (executable.get_extensions_amount() as u16) * 2);
             executable.execute(self);
         }
         CpuOff

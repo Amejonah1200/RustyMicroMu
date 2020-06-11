@@ -1,3 +1,5 @@
+use num::FromPrimitive;
+
 use crate::instruction::instruction::AddressingMode::{
     Absolute, Constant0, Constant2, Constant4, Constant8, ConstantN1, ConstantP1, RegisterDirect,
     RegisterIndexed, RegisterIndirect, RegisterIndirectAutoincrement, Unknown,
@@ -53,6 +55,7 @@ pub fn get_addressing_mode_source(cpu: &CPU, register: u16, source_mode: u16) ->
         _ => Unknown,
     }
 }
+
 /**
 * Gives back the addressing mode for the destination, caution it assumes that "pc += 2" was done before!
 */
@@ -83,7 +86,7 @@ fn get_word_at_pc_next(cpu: &CPU) -> u16 {
 }
 
 pub trait ExecutableInstruction {
-    fn get_length(&self) -> u16;
+    fn get_extensions_amount(&self) -> u16;
     fn execute(&self, cpu: &mut CPU) -> ExecutionResult;
     fn get_instruction_type(&self) -> InstructionType;
     fn get_instruction_raw(&self) -> Instruction;
