@@ -1,5 +1,7 @@
 #![allow(dead_code)]
 
+use num_traits::{FromPrimitive, ToPrimitive};
+
 use crate::instruction::disassembler;
 use crate::instruction::disassembler::ParseState;
 use crate::instruction::instruction::Instruction;
@@ -21,7 +23,10 @@ impl CPU {
 
     fn run(&mut self) -> ExecutionResult {
         loop {
-            if self.is_flag_set(StatusFlag::CpuOffFlag as u16) {
+            if self.is_flag_set(match StatusFlag::CpuOffFlag.to_u16() {
+                Some(flag) => flag,
+                None => 0,
+            }) {
                 break;
             }
             let instruction =
@@ -100,7 +105,8 @@ pub enum ExecutionResult {
     AddressNotAligned,
 }
 
-#[repr(u8)]
+#[repr(u16)]
+#[derive(FromPrimitive, ToPrimitive)]
 pub enum CPURegister {
     /**
      * The 16-bit program counter (PC/R0) points to the next instruction to be executed.
@@ -132,6 +138,7 @@ pub enum CPURegister {
 }
 
 #[repr(u16)]
+#[derive(FromPrimitive, ToPrimitive)]
 pub enum StatusFlag {
     /**
      * Carry bit. Set when the result of a byte or word operation produced a carry and cleared when no carry occurred.

@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use num::FromPrimitive;
+use num_traits::{FromPrimitive, ToPrimitive};
 
 use crate::instruction::disassembler::ParseState;
 use crate::instruction::instruction::{ExecutableInstruction, Instruction, InstructionType};
@@ -97,17 +97,15 @@ pub fn get_jump_from_instruction(value: u16) -> JumpType {
     }
 }
 
-enum_from_primitive! {
-    # [derive(Debug, PartialEq, Clone)]
-    pub enum JumpType {
-        JNZ,
-        JZ,
-        JNC,
-        JC,
-        JN,
-        JGE,
-        JL,
-        JMP,
-        Unknown,
-    }
+#[derive(Debug, PartialEq, Clone, FromPrimitive, ToPrimitive)]
+pub enum JumpType {
+    JNZ,
+    JZ,
+    JNC,
+    JC,
+    JN,
+    JGE,
+    JL,
+    JMP,
+    Unknown,
 }

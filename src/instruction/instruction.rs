@@ -1,10 +1,9 @@
-use num::FromPrimitive;
-
 use crate::instruction::instruction::AddressingMode::{
     Absolute, Constant0, Constant2, Constant4, Constant8, ConstantN1, ConstantP1, Immediate,
     RegisterDirect, RegisterIndexed, RegisterIndirect, RegisterIndirectAutoincrement, Unknown,
 };
 use crate::machine::cpu::{ExecutionResult, CPU};
+use num_traits::{FromPrimitive, ToPrimitive};
 
 #[derive(Clone)]
 pub struct Instruction {
@@ -106,38 +105,36 @@ pub fn is_addressing_mode_extension(mode: &AddressingMode) -> bool {
     }
 }
 
-enum_from_primitive! {
-    #[derive(Debug, PartialEq, Clone)]
-    pub enum InstructionType {
-        RRC = 0b00_0000,
-        SWPB,
-        RRA,
-        SXT,
-        PUSH,
-        CALL,
-        RETI,
-        JNZ = 0b01_0000,
-        JZ,
-        JNC,
-        JC,
-        JN,
-        JGE,
-        JL,
-        JMP,
-        MOV = 0b10_0000,
-        ADD,
-        ADDC,
-        SUBC,
-        SUB,
-        CMP,
-        DADD,
-        BIT,
-        BIC,
-        BIS,
-        XOR,
-        AND,
-        Unknown = 0b11_0000,
-    }
+#[derive(Debug, PartialEq, Clone, FromPrimitive, ToPrimitive)]
+pub enum InstructionType {
+    RRC = 0b00_0000,
+    SWPB,
+    RRA,
+    SXT,
+    PUSH,
+    CALL,
+    RETI,
+    JNZ = 0b01_0000,
+    JZ,
+    JNC,
+    JC,
+    JN,
+    JGE,
+    JL,
+    JMP,
+    MOV = 0b10_0000,
+    ADD,
+    ADDC,
+    SUBC,
+    SUB,
+    CMP,
+    DADD,
+    BIT,
+    BIC,
+    BIS,
+    XOR,
+    AND,
+    Unknown = 0b11_0000,
 }
 
 #[derive(Debug, PartialEq, Clone)]

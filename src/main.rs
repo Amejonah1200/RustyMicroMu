@@ -1,4 +1,11 @@
 #![allow(unused_imports)]
 
-fn main() {
-}
+#[macro_use]
+extern crate num_derive;
+
+use std::convert::TryInto;
+
+mod instruction;
+mod machine;
+
+fn main() {}
