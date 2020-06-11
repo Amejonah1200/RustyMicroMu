@@ -84,6 +84,48 @@ pub fn get_addressing_mode_destination(
     }
 }
 
+pub fn get_value_from_mode(cpu: &CPU, mode: AddressingMode) -> u16 {
+    match mode {
+        RegisterDirect(register) => cpu.get_register(register as usize),
+        RegisterIndexed(register, word) => cpu.get_memory().get_word_be(
+            cpu.get_register(register as usize)
+                .wrapping_add(word as u16),
+        ),
+        RegisterIndirect(register) | RegisterIndirectAutoincrement(register) => cpu
+            .get_memory()
+            .get_word_be(cpu.get_register(register as usize)),
+        Immediate(word) => word,
+        Absolute(address) => cpu.get_memory().get_word_be(address),
+        Constant4 => 4,
+        Constant8 => 8,
+        Constant0 => 0,
+        ConstantP1 => 1,
+        Constant2 => 2,
+        ConstantN1 => -1i16 as u16,
+        Unknown => 0,
+    }
+}
+
+pub fn set_value_from_mode(cpu: &mut CPU, mode: AddressingMode, value: u16) {
+    let mut address = 0u16;
+    match mode {
+        RegisterDirect(register) => cpu.set_register(register as usize, value),
+        RegisterIndexed(register, word) => {
+            address = cpu
+                .get_register(register as usize)
+                .wrapping_add(word as u16);
+            cpu.get_memory_mut().set_word(address, value)
+        }
+        RegisterIndirect(register) | RegisterIndirectAutoincrement(register) => {
+            address = cpu.get_register(register as usize);
+            cpu.get_memory_mut().set_word(address, value)
+        }
+        Immediate(word) => cpu.memory.set_word(cpu.get_pc(), value),
+        Absolute(address) => cpu.memory.set_word(address, value),
+        _ => {}
+    }
+}
+
 fn get_word_at_pc(cpu: &CPU) -> u16 {
     cpu.get_memory().get_word_be(cpu.get_pc())
 }
