@@ -9,8 +9,8 @@ use crate::machine::cpu::StatusFlag::{CarryFlag, NegativeFlag, OverflowFlag, Zer
 use crate::machine::cpu::{ExecutionResult, CPU};
 
 pub struct JumpInstruction {
-    pub instruction: Instruction,
-    pub jump_type: JumpType,
+    instruction: Instruction,
+    jump_type: JumpType,
     pub offset: u16,
 }
 
@@ -37,6 +37,10 @@ impl JumpInstruction {
     pub fn get_jump_type(&self) -> JumpType {
         self.jump_type.clone()
     }
+
+    pub fn get_instruction(&self) -> Instruction {
+        self.instruction.clone()
+    }
 }
 
 impl ExecutableInstruction for JumpInstruction {
@@ -48,7 +52,7 @@ impl ExecutableInstruction for JumpInstruction {
         if self.jump_type == JumpType::Unknown {
             return ParseError;
         }
-        let can_jump = match self.jump_type {
+        let can_jump = match self.get_jump_type() {
             JumpType::JNZ => !cpu.is_flag_set(ZeroFlag as u16),
             JumpType::JZ => cpu.is_flag_set(ZeroFlag as u16),
             JumpType::JNC => !cpu.is_flag_set(CarryFlag as u16),
