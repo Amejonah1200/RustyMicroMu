@@ -42,7 +42,6 @@ pub fn get_addressing_mode_source(cpu: &CPU, register: u16, source_mode: u16) ->
                     RegisterIndirectAutoincrement(register)
                 }
             }
-
             _ => Unknown,
         },
         2 => match source_mode {
@@ -144,6 +143,7 @@ pub trait ExecutableInstruction {
 pub fn is_addressing_mode_extension(mode: &AddressingMode) -> bool {
     match mode {
         RegisterIndexed(_, _) | Absolute(_) => true,
+        RegisterIndirectAutoincrement(register) => *register == 0,
         _ => false,
     }
 }
