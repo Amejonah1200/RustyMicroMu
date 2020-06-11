@@ -18,11 +18,11 @@ impl Instruction {
     }
 
     pub fn get_address(&self) -> u16 {
-        return self.address.clone();
+        return self.address;
     }
 
     pub fn get_value(&self) -> u16 {
-        return self.value.clone();
+        return self.value;
     }
 }
 
