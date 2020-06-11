@@ -3,7 +3,7 @@
 use crate::instruction::disassembler;
 use crate::instruction::disassembler::ParseState;
 use crate::instruction::instruction::Instruction;
-use crate::machine::cpu::ExecutionResult::CpuOff;
+use crate::machine::cpu::ExecutionResult::{CpuOff, Done};
 use crate::machine::memory::Memory;
 
 pub struct CPU {
@@ -32,7 +32,10 @@ impl CPU {
                 ParseState::Error(_) => return ExecutionResult::ParseError,
             };
             self.set_pc(self.get_pc() + (executable.get_extensions_amount() as u16) * 2);
-            executable.execute(self);
+            let result = executable.execute(self);
+            if result != Done {
+                return result;
+            }
         }
         CpuOff
     }
@@ -88,11 +91,13 @@ impl CPU {
     }
 }
 
+#[derive(PartialEq)]
 pub enum ExecutionResult {
     Done,
     CpuOff,
     ParseError,
     ExecutionError,
+    AddressNotAligned,
 }
 
 #[repr(u8)]
