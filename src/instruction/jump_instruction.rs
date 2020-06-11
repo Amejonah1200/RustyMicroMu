@@ -70,9 +70,14 @@ impl ExecutableInstruction for JumpInstruction {
     }
 
     fn get_instruction_type(&self) -> InstructionType {
-        match InstructionType::from_u16((1 << 4) | (self.jump_type.clone() as u16)) {
-            Some(jump) => jump,
-            None => InstructionType::Unknown,
+        let type_id = (1 << 4) | (self.jump_type.clone() as u16);
+        if (16u16 <= type_id) && (type_id < 31u16) {
+            match InstructionType::from_u16(type_id) {
+                Some(jump) => jump,
+                None => InstructionType::Unknown,
+            }
+        } else {
+            InstructionType::Unknown
         }
     }
 
